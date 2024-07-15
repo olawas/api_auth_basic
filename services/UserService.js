@@ -77,7 +77,12 @@ const findUsers = async (req) => {
             status: deleted === 'true' ? false : true
         }
     });
-
+    
+    if (!loginBefore && !loginAfter) {
+        return {
+            code: 200,
+            message: users};
+    }
     const filteredUsers = await Promise.all(users.map(async (user) => {
         const sessions = await db.Session.findAll({
             where: {
