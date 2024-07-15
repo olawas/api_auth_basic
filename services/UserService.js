@@ -13,6 +13,7 @@ import user from '../dist/db/models/user.js';
 const validateUser = (user) => {
     const { name, password, email, cellphone } = user;
     if (!name || !password || !email || !cellphone) {
+        console.log("Error con validacion de usuario")
         return false;
     }
     return true;
@@ -31,8 +32,9 @@ const bulkCreateUsers = async (users) => {
                     }
                 });
                 if (userExist) {
+                    console.log("Encontramos a uno creado")
                     failureCount++;
-                    return 
+                    continue
                 }
             
                 const encryptedPassword = await bcrypt.hash(user.password, 10);
@@ -80,7 +82,7 @@ const findUsers = async (req) => {
         const sessions = await db.Session.findAll({
             where: {
                 id_user: user.id,
-                expiration: {
+                createdAt: {
                     [Op.lte]: new Date(loginBefore),
                     [Op.gte]: new Date(loginAfter)
                 }

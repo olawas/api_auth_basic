@@ -5,7 +5,7 @@ import UserMiddleware from '../middlewares/user.middleware.js';
 import AuthMiddleware from '../middlewares/auth.middleware.js';
 const router = Router();
 
-router.post('/bulkCreate', async (req, res) => {
+router.post('/bulkCreate',[AuthMiddleware.validateToken], async (req, res) => {
     try {
         const { successCount, failureCount } = await UserService.bulkCreateUsers(req.body.users);
         res.status(200).json({
@@ -16,7 +16,7 @@ router.post('/bulkCreate', async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
-router.get('/findUsers',[], async (req,res) => {
+router.get('/findUsers',[AuthMiddleware.validateToken], async (req,res) => {
     const response = await UserService.findUsers(req);
     res.status(response.code).json(response.message);
 })
